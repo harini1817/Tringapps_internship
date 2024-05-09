@@ -1,0 +1,93 @@
+body{
+  min-height: 100vh;
+
+    background-color: #9ca4cb;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 20px;
+}
+.box{
+  position:relative;
+  max-width: 700px;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding:25px;
+  border: 2px solid black;
+  
+.row{
+  display: flex;
+  column-gap:10vh;
+  row-gap:10vh;
+} 
+
+}
+input {
+    border: 1px solid rgb(14, 13, 13);
+    height: 20px;
+    background-color: white;
+    
+   
+  }
+  input[type=text]:focus {
+    background-color: rgb(126, 123, 123);
+  }
+  textarea{
+    border: 1px solid #100f0f;
+    background-color: #dfdee3;
+    color: white;
+  }
+  select{
+    border: 2px solid #FFE6E6;
+    border-radius: 4px;
+    background-color: #101011;
+    color: white;
+  }
+  @media only screen and (max-width: 600px) {
+    body {
+    background-color:rgb(11, 11, 11) ;
+    }
+    }
+.radio{
+        display: block;
+        cursor: pointer; 
+        user-select:none;
+        text-align: left;
+        &+.radio{
+          margin-top: 12px;
+}
+#message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#message p {
+  padding: 10px 35px;
+  font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
+}
