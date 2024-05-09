@@ -1,0 +1,108 @@
+import React , { useState } from 'react'
+import './styles.css'
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
+export default function Myform() {
+  const [city, setCity] = useState('');
+  const [email, setEmail] = useState('');
+
+
+  const navigate = useNavigate();
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (city.trim() === '') {
+      alert('Please enter a city');
+      return;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
+    // Get existing users data from cookie or initialize an empty array
+    const existingUsersData = Cookies.get('usersData') ? JSON.parse(Cookies.get('usersData')) : [];
+
+    // Add new user data to the array
+    const newUser = { city, email };
+    const updatedUsersData = [...existingUsersData, newUser];
+
+    // Store the updated array back in the cookie
+    Cookies.set('usersData', JSON.stringify(updatedUsersData), { expires: 365 });
+
+    // Clear the form fields
+    
+    setCity('');
+    setEmail('');
+
+
+
+
+    navigate('/hello',{ state: { email,city } });
+  };
+
+  const handleChange = (event) => {
+    if (event.target.id === 'inputEmail4') {
+      setEmail(event.target.value);
+      
+    } else if (event.target.id === 'inputCity') {
+      setCity(event.target.value);
+      
+    }
+    
+  };
+  
+
+  return (
+    <><div> <h2>Register</h2></div>
+    
+<div class='box'>
+    <form class="row g-3" onSubmit={handleSubmit}>
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label">Email</label>
+    <input type="email" class="form-control" id="inputEmail4" value={email} onChange={handleChange}/>
+  </div>
+  <div class="col-md-6">
+    <label for="inputPassword4" class="form-label">Password</label>
+    <input type="password" class="form-control" id="inputPassword4"/>
+  </div>
+  <div class="col-12">
+    <label for="inputAddress" class="form-label">User Name</label>
+    <input type="text" class="form-control" id="inputname"/>
+  </div>
+  <div class="col-12">
+    <label for="inputAddress2" class="form-label">Address</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="Apartment, studio, or floor"/>
+  </div>
+  <div class="col-md-6">
+    <label for="City" class="form-label">City</label>
+    <input type="text" className="form-control" id="inputCity" value={city} onChange={handleChange} />  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">State</label>
+    <select id="inputState" class="form-select">
+      <option selected>Tamilnadu</option>
+      <option>Kerala</option>
+      <option>Karnataka</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label for="inputZip" class="form-label">Zip</label>
+    <input type="text" class="form-control" id="inputZip"/>
+  </div>
+  <div class="col-3">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="gridCheck"/>
+      <label class="form-check-label" for="gridCheck">
+        Check me out
+      </label>
+    </div>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Sign in</button>
+  </div>
+</form>
+</div> </>
+  )
+}
