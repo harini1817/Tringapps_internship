@@ -14,8 +14,10 @@ export default function Sub() {
   }, []);
 
   const columns = [
+    { field: "username", headerName: "Username", width: 200 },
     { field: "email", headerName: "Email", width: 200 },
     { field: "city", headerName: "City", width: 200 },
+    { field: "address", headerName: "Address", width: 200 },
   ];
 
   return (

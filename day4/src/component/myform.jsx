@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 export default function Myform() {
-  const [city, setCity] = useState('');
+  const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
-
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
 
   const navigate = useNavigate();
 
@@ -26,21 +27,20 @@ export default function Myform() {
     const existingUsersData = Cookies.get('usersData') ? JSON.parse(Cookies.get('usersData')) : [];
 
     // Add new user data to the array
-    const newUser = { city, email };
+    const newUser = { username,email,city,address};
     const updatedUsersData = [...existingUsersData, newUser];
 
     // Store the updated array back in the cookie
     Cookies.set('usersData', JSON.stringify(updatedUsersData), { expires: 365 });
 
     // Clear the form fields
-    
+    setUserName('');
     setCity('');
     setEmail('');
+    setAddress('');
 
 
-
-
-    navigate('/hello',{ state: { email,city } });
+    navigate('/hello',{ state: { username,email,city,address} });
   };
 
   const handleChange = (event) => {
@@ -51,7 +51,14 @@ export default function Myform() {
       setCity(event.target.value);
       
     }
-    
+    else if (event.target.id === 'inputname') {
+      setUserName(event.target.value);
+      
+    }
+    else if (event.target.id === 'inputAddress') {
+      setAddress(event.target.value);
+      
+    }
   };
   
 
@@ -70,11 +77,11 @@ export default function Myform() {
   </div>
   <div class="col-12">
     <label for="inputAddress" class="form-label">User Name</label>
-    <input type="text" class="form-control" id="inputname"/>
+    <input type="text" class="form-control" id="inputname" value={username} onChange={handleChange}/>
   </div>
   <div class="col-12">
-    <label for="inputAddress2" class="form-label">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="Apartment, studio, or floor"/>
+    <label for="inputAddress" class="form-label">Address</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="Apartment, studio, or floor" value={address} onChange={handleChange}/>
   </div>
   <div class="col-md-6">
     <label for="City" class="form-label">City</label>
