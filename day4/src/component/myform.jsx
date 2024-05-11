@@ -8,6 +8,8 @@ export default function Myform() {
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
   const [address, setAddress] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
 
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ export default function Myform() {
     const existingUsersData = Cookies.get('usersData') ? JSON.parse(Cookies.get('usersData')) : [];
 
     // Add new user data to the array
-    const newUser = { username,email,city,address};
+    const newUser = { username,email,city,address,state,zip};
     const updatedUsersData = [...existingUsersData, newUser];
 
     // Store the updated array back in the cookie
@@ -38,9 +40,9 @@ export default function Myform() {
     setCity('');
     setEmail('');
     setAddress('');
-
-
-    navigate('/hello',{ state: { username,email,city,address} });
+    setState('');
+    setZip('');
+    navigate('/hello',{ state: { username,email,city,address,state,zip} });
   };
 
   const handleChange = (event) => {
@@ -59,11 +61,19 @@ export default function Myform() {
       setAddress(event.target.value);
       
     }
+    else if (event.target.id === 'inputState') {
+      setState(event.target.value);
+      
+    }
+    else if (event.target.id === 'inputZip') {
+      setZip(event.target.value);
+      
+    }
   };
   
 
   return (
-    <><div> <h2>Register</h2></div>
+    <><div className="text-center" style={{ color: 'white !important' }}>SIGN UP</div>
     
 <div class='box'>
     <form class="row g-3" onSubmit={handleSubmit}>
@@ -88,15 +98,15 @@ export default function Myform() {
     <input type="text" className="form-control" id="inputCity" value={city} onChange={handleChange} />  </div>
   <div class="col-md-4">
     <label for="inputState" class="form-label">State</label>
-    <select id="inputState" class="form-select">
-      <option selected>Tamilnadu</option>
+    <select id="inputState" class="form-select" value={state} onChange={handleChange}>
+      <option>Tamilnadu</option>
       <option>Kerala</option>
       <option>Karnataka</option>
     </select>
   </div>
   <div class="col-md-2">
     <label for="inputZip" class="form-label">Zip</label>
-    <input type="text" class="form-control" id="inputZip"/>
+    <input type="text" class="form-control" id="inputZip" value={zip} onChange={handleChange}/>
   </div>
   <div class="col-3">
     <div class="form-check">
