@@ -6,7 +6,7 @@ import axios from 'axios';
 
 export default function MyForm() {
   const [values, setValues] = useState({
-    username: '',
+    name: '',
     email: '',
     city: '',
     address: '',
@@ -30,14 +30,14 @@ export default function MyForm() {
     .then((res) => {
       console.log(res);
       setValues({
-        username: '',
+        name: '',
         email: '',
         city: '',
         address: '',
         state: '',
         zip: ''
       });
-      navigate('/hello', { state: values });
+      navigate('/hello');
     })
     .catch((err) => console.log(err));
   };
@@ -62,7 +62,7 @@ export default function MyForm() {
           </div>
           <div className="col-12">
             <label htmlFor="inputAddress" className="form-label">User Name</label>
-            <input type="text" className="form-control" id="username" value={values.username} onChange={handleChange} />
+            <input type="text" className="form-control" id="name" value={values.name} onChange={handleChange} />
           </div>
           <div className="col-12">
             <label htmlFor="inputAddress" className="form-label">Address</label>
