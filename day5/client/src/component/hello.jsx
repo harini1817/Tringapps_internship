@@ -40,6 +40,7 @@ export default function Sub() {
             pageSize={5}
             rowsPerPageOptions={[5, 10, 20]}
             checkboxSelection
+            style={{ background: 'white' }}
           />
         )
       </div>
