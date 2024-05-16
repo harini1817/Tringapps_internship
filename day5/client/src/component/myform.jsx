@@ -26,13 +26,15 @@ export default function MyForm() {
       alert('Please enter a valid email address');
       return;
     }
+    console.log('Submitting data:', values); // Add this line
     axios.post('http://localhost:8081/add_user', values)
     .then((res) => {
-      console.log(res);
+      console.log('Response:', res.data); // Add this line
       navigate('/hello');
     })
     .catch((err) => console.log(err));
   };
+  
 
   const handleChange = (event) => {
     const { id, value } = event.target;
