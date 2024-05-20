@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Myform from './component/myform';
 import Sub from './component/hello'

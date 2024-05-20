@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { IconButton, Button } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sub() {
-  const navigate = useNavigate(); // Get the navigate function
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [editRowsModel, setEditRowsModel] = useState({});
   const [editRowId, setEditRowId] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -63,6 +67,16 @@ export default function Sub() {
     }
   };
 
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(selectedRows.map((id) => axios.delete(`http://localhost:8081/users/${id}`)));
+      fetchData();
+      setSelectedRows([]);
+    } catch (err) {
+      console.error('Error deleting selected data:', err);
+    }
+  };
+
   const columns = [
     { field: 'userId', headerName: 'ID', width: 90, editable: false },
     { field: 'name', headerName: 'Name', width: 150, editable: true },
@@ -77,25 +91,21 @@ export default function Sub() {
       width: 150,
       renderCell: (cellValues) => (
         editRowId === cellValues.id ? (
-          <Button
-            variant="contained"
-            color="primary"
+          <IconButton
             onClick={(event) => {
               handleSave(event, cellValues);
             }}
           >
-            Save
-          </Button>
+            <SaveIcon />
+          </IconButton>
         ) : (
-          <Button
-            variant="contained"
-            color="success"
+          <IconButton
             onClick={(event) => {
               handleEdit(event, cellValues);
             }}
           >
-            Edit
-          </Button>
+            <EditIcon />
+          </IconButton>
         )
       ),
     },
@@ -104,15 +114,13 @@ export default function Sub() {
       headerName: 'Delete',
       width: 150,
       renderCell: (cellValues) => (
-        <Button
-          variant="contained"
-          color="error"
+        <IconButton
           onClick={(event) => {
             handleDelete(event, cellValues);
           }}
         >
-          Delete
-        </Button>
+          <DeleteIcon />
+        </IconButton>
       ),
     },
   ];
@@ -123,9 +131,9 @@ export default function Sub() {
         variant="contained"
         color="secondary"
         onClick={() => {
-          navigate('/myform'); // Navigate to the MyForm page
+          navigate('/'); // Navigate to the MyForm page
         }}
-        style={{ marginBottom: '10px' }} // Add some space below the button
+        style={{ marginBottom: '10px' }}
       >
         Create User
       </Button>
@@ -141,8 +149,20 @@ export default function Sub() {
           }}
           onCellClick={handleCellClick}
           onRowClick={handleRowCellClick}
+          checkboxSelection
+          onSelectionModelChange={(newSelection) => {
+            setSelectedRows(newSelection.selectionModel);
+          }}
         />
       </div>
+      <Button
+        variant="contained"
+        color="warning"
+        onClick={handleDeleteSelected}
+        style={{ marginTop: '10px' }}
+      >
+        Delete Selected
+      </Button>
     </div>
   );
 }
