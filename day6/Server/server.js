@@ -21,7 +21,7 @@ db.connect((err) => {
   console.log('Connected to the database');
 });
 
-
+// Get all users
 app.get('/users', (req, res) => {
   const sql = "SELECT * FROM student_details";
   db.query(sql, (err, rows) => {
@@ -33,11 +33,12 @@ app.get('/users', (req, res) => {
   });
 });
 
+// Create a new user
 app.post('/add_user', (req, res) => {
-  const { userId, name, email, city, address, state, zip } = req.body; // Use the userId received from the client
+  const { userId, name, email, city, address, state, zip } = req.body;
   const sql = "INSERT INTO student_details (userId, name, email, city, address, state, zip) VALUES (?, ?, ?, ?, ?, ?, ?)";
   const values = [userId, name, email, city, address, state, zip];
-  
+
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error('Error executing query:', err);
@@ -48,12 +49,9 @@ app.post('/add_user', (req, res) => {
   });
 });
 
-
-
+// Update user
 app.put('/users/:userId', (req, res) => {
   const { userId, name, email, city, address, state, zip } = req.body;
-  console.log('Updating user:', req.body); // Add this line
-
   const sql = `
     UPDATE student_details 
     SET name=?, email=?, city=?, address=?, state=?, zip=? 
@@ -71,10 +69,23 @@ app.put('/users/:userId', (req, res) => {
   });
 });
 
+// Delete user
+app.delete('/users/:userId', (req, res) => {
+  const { userId } = req.params;
+  console.log('Deleting user with ID:', userId);
 
-
+  const sql = "DELETE FROM student_details WHERE userId = ?";
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error('Error deleting user:', err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    console.log('Deleted successfully:', result);
+    return res.json({ success: true, result });
+  });
+});
 
 const PORT = process.env.PORT || 8081;
-app.listen( 8081, () => {
-  console.log("server is running");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

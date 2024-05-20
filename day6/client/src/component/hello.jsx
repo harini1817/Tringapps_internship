@@ -1,60 +1,70 @@
 import React, { useState, useEffect } from 'react';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import { DataGrid } from '@mui/x-data-grid';
-import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export default function Sub() {
+  const navigate = useNavigate(); // Get the navigate function
   const [users, setUsers] = useState([]);
-  const [editingRowId, setEditingRowId] = useState(null);
-  const navigate = useNavigate();
+  const [editRowsModel, setEditRowsModel] = useState({});
+  const [editRowId, setEditRowId] = useState(null);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  
-  const handleNewUser = () => {
-    navigate('/myform'); // Navigate to the desired next page
-  };
-  
-  
-  const generateUserId = () => {
-    // Generate a random 3-digit number as the user ID
-    return Math.floor(100 + Math.random() * 900);
-  };
-
-  const handleEdit = (id) => {
-    setEditingRowId(id);
-  };
-
-  const handleSave = async (id, updatedUserData) => {
+  const fetchData = async () => {
     try {
-      const { userId, name, email, city, address, state, zip } = updatedUserData;
-      console.log('Saving data:', updatedUserData);
-  
-      await axios.put(`http://localhost:8081/users/${userId}`, { userId, name, email, city, address, state, zip });
-      setEditingRowId(null);
-      fetchData(); // Fetch updated data after saving
-    } catch (error) {
-      console.error('Error updating user data:', error);
+      const response = await axios.get('http://localhost:8081/users');
+      setUsers(response.data.map((user, index) => ({ ...user, id: user.userId })));
+    } catch (err) {
+      console.error('Error fetching data:', err);
     }
   };
-  
 
-  
-  
-  
-  
-  
+  const handleCellClick = (param, event) => {
+    event.stopPropagation();
+  };
 
-  const buttonStyle = {
-    minWidth: '80px',
-    marginRight: '8px',
-    height: '40px'
+  const handleRowCellClick = (param, event) => {
+    event.stopPropagation();
+  };
+
+  const handleEdit = (event, cellValues) => {
+    setEditRowId(cellValues.id);
+    setEditRowsModel((prevEditRowsModel) => ({
+      ...prevEditRowsModel,
+      [cellValues.id]: true,
+    }));
+  };
+
+  const handleSave = async (event, cellValues) => {
+    const { id } = cellValues.row;
+    try {
+      await axios.put(`http://localhost:8081/users/${id}`, cellValues.row);
+      setEditRowsModel((prevEditRowsModel) => ({
+        ...prevEditRowsModel,
+        [cellValues.id]: false,
+      }));
+      setEditRowId(null);
+      fetchData();
+    } catch (err) {
+      console.error('Error saving data:', err);
+    }
+  };
+
+  const handleDelete = async (event, cellValues) => {
+    try {
+      await axios.delete(`http://localhost:8081/users/${cellValues.row.id}`);
+      fetchData();
+    } catch (err) {
+      console.error('Error deleting data:', err);
+    }
   };
 
   const columns = [
-    { field: 'userId', headerName: 'User ID', width: 150, editable: false },
+    { field: 'userId', headerName: 'ID', width: 90, editable: false },
     { field: 'name', headerName: 'Name', width: 150, editable: true },
     { field: 'email', headerName: 'Email', width: 200, editable: true },
     { field: 'city', headerName: 'City', width: 150, editable: true },
@@ -62,53 +72,77 @@ export default function Sub() {
     { field: 'state', headerName: 'State', width: 150, editable: true },
     { field: 'zip', headerName: 'ZIP', width: 120, editable: true },
     {
-      field: '', headerName: 'Action', width: 200,
-      renderCell: (params) => {
-        if (params.row.userId === editingRowId) {
-          return (
-            <>
-              <button style={{ ...buttonStyle, backgroundColor: 'green', color: 'white' }} onClick={() => handleSave(params.row.userId, params.row)}>Save</button>
-            </>
-          );
-        } else {
-          return (
-            <>
-              <button style={{ ...buttonStyle, backgroundColor: 'blue', color: 'white' }} onClick={() => handleEdit(params.row.userId)}>Edit</button>
-              <button style={{ ...buttonStyle, backgroundColor: 'red', color: 'white' }}>Delete</button>
-            </>
-          );
-        }
-      },
+      field: 'actions',
+      headerName: 'Actions',
+      width: 150,
+      renderCell: (cellValues) => (
+        editRowId === cellValues.id ? (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(event) => {
+              handleSave(event, cellValues);
+            }}
+          >
+            Save
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="success"
+            onClick={(event) => {
+              handleEdit(event, cellValues);
+            }}
+          >
+            Edit
+          </Button>
+        )
+      ),
+    },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      width: 150,
+      renderCell: (cellValues) => (
+        <Button
+          variant="contained"
+          color="error"
+          onClick={(event) => {
+            handleDelete(event, cellValues);
+          }}
+        >
+          Delete
+        </Button>
+      ),
     },
   ];
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/users');
-      setUsers(response.data);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-    }
-  };
-  
-
   return (
-    <>
-      <div className="text-center text-white"><h2>User Data</h2></div>
-      <div style={{ height: 400, width: '100%' }}>
-        <div style={{ marginBottom: '16px' }}>
-          <button onClick={handleNewUser} style={{ ...buttonStyle, backgroundColor: 'green' }}>Create user</button>
-        </div>
+    <div>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          navigate('/myform'); // Navigate to the MyForm page
+        }}
+        style={{ marginBottom: '10px' }} // Add some space below the button
+      >
+        Create User
+      </Button>
+      <div style={{ height: 400, width: '100%', background: 'white' }}>
         <DataGrid
           rows={users}
           columns={columns}
           pageSize={5}
-          rowsPerPageOptions={[5, 10, 20]}
-          style={{ background: 'white' }}
-          editMode={editingRowId ? 'row' : undefined}
-          getRowId={(row) => row.userId} // Specify the userId as the row ID
+          editRowsModel={editRowsModel}
+          onEditRowModelChange={(newModel) => setEditRowsModel(newModel)}
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          onCellClick={handleCellClick}
+          onRowClick={handleRowCellClick}
         />
       </div>
-    </>
+    </div>
   );
 }
