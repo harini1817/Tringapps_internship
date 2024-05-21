@@ -67,6 +67,7 @@ export default function MyForm() {
           <div className="col-md-4">
             <label htmlFor="inputState" className="form-label">State</label>
             <select id="state" className="form-select" value={values.state} onChange={handleChange}>
+            <option value="">--</option> 
               <option>Tamilnadu</option>
               <option>Kerala</option>
               <option>Karnataka</option>
