@@ -36,7 +36,7 @@ app.get('/users', (req, res) => {
 // Create a new user
 app.post('/add_user', (req, res) => {
   const { userId, name, email, city, address, state, zip, dob, phoneNumber } = req.body;
-  const sql = "INSERT INTO student_details (userId, name, email, city, address, state, zip, dob, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
+  const sql = "INSERT INTO student_details (userId, name, email, city, address, state, zip, dob, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
   const values = [userId, name, email, city, address, state, zip, dob, phoneNumber];
 
   db.query(sql, values, (err, result) => {
@@ -69,7 +69,7 @@ app.put('/users/:userId', (req, res) => {
   });
 });
 
-// Delete user
+// Delete single user
 app.delete('/users/:userId', (req, res) => {
   const { userId } = req.params;
   console.log('Deleting user with ID:', userId);
@@ -82,6 +82,23 @@ app.delete('/users/:userId', (req, res) => {
     }
     console.log('Deleted successfully:', result);
     return res.json({ success: true, result });
+  });
+});
+
+app.delete('/delete_users', (req, res) => {
+  const { ids } = req.body; // Expecting an array of user IDs
+  if (!ids || ids.length === 0) {
+    res.status(400).send({ message: 'No IDs provided' });
+    return;
+  }
+  const sql = 'DELETE FROM student_details WHERE userId IN (?)';
+  db.query(sql, [ids], (err, result) => {
+    if (err) {
+      console.error('Error deleting users:', err);
+      res.status(500).send('Error deleting users');
+      return;
+    }
+    res.send({ message: 'Users deleted successfully' });
   });
 });
 

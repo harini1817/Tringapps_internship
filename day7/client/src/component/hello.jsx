@@ -12,7 +12,7 @@ export default function Sub() {
   const [users, setUsers] = useState([]);
   const [editRowsModel, setEditRowsModel] = useState({});
   const [editRowId, setEditRowId] = useState(null);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows,setSelectedRows] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -21,11 +21,16 @@ export default function Sub() {
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:8081/users');
-      setUsers(response.data.map((user, index) => ({ ...user, id: user.userId })));
+      setUsers(response.data.map((user) => ({ 
+        ...user,
+        id: user.userId,
+        dob: user.dob.split('T')[0] // Extracting only the date part
+      })));
     } catch (err) {
       console.error('Error fetching data:', err);
     }
   };
+  
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -48,8 +53,8 @@ export default function Sub() {
     try {
       await axios.put(`http://localhost:8081/users/${id}`, {
         ...rest,
-        dob: new Date(dob).toISOString().split('T')[0], // Format date correctly
-        phoneNumber: phoneNumber.toString(), // Ensure phone number is a string
+        dob: new Date(dob).toISOString().split('T')[0],
+        phoneNumber: phoneNumber.toString(),
       });
       setEditRowsModel((prevEditRowsModel) => ({
         ...prevEditRowsModel,
@@ -61,8 +66,9 @@ export default function Sub() {
       console.error('Error saving data:', err);
     }
   };
-  
+
   const handleDelete = async (event, cellValues) => {
+
     try {
       await axios.delete(`http://localhost:8081/users/${cellValues.row.id}`);
       fetchData();
@@ -72,14 +78,19 @@ export default function Sub() {
   };
 
   const handleDeleteSelected = async () => {
-    try {
-      await Promise.all(selectedRows.map((id) => axios.delete(`http://localhost:8081/users/${id}`)));
-      fetchData();
-      setSelectedRows([]);
-    } catch (err) {
-      console.error('Error deleting selected data:', err);
+if(selectedRows.length===0){
+  console.warn('no rows selected');
+}
+  try {
+   console.log('Deleting selected rows:', selectedRows); // Debugging line
+   await axios.delete('http://localhost:8081/delete_users', { data: { ids: selectedRows } });
+ fetchData();
+     setSelectedRows([]);
+ } catch (err) {
+    console.error('Error deleting selected data:', err);
     }
-  };
+   };
+  
 
   const columns = [
     { field: 'userId', headerName: 'ID', width: 90, editable: false },
@@ -90,26 +101,18 @@ export default function Sub() {
     { field: 'state', headerName: 'State', width: 150, editable: true },
     { field: 'zip', headerName: 'ZIP', width: 120, editable: true },
     { field: 'dob', headerName: 'Date of birth', width: 120, editable: true },
-    { field: 'phoneNumber', headerName: 'Conntact', width: 120, editable: true },
+    { field: 'phoneNumber', headerName: 'Contact', width: 120, editable: true },
     {
       field: 'actions',
       headerName: 'Actions',
       width: 150,
       renderCell: (cellValues) => (
         editRowId === cellValues.id ? (
-          <IconButton
-            onClick={(event) => {
-              handleSave(event, cellValues);
-            }}
-          >
+          <IconButton onClick={(event) => handleSave(event, cellValues)}>
             <SaveIcon />
           </IconButton>
         ) : (
-          <IconButton
-            onClick={(event) => {
-              handleEdit(event, cellValues);
-            }}
-          >
+          <IconButton onClick={(event) => handleEdit(event, cellValues)}>
             <EditIcon />
           </IconButton>
         )
@@ -120,12 +123,8 @@ export default function Sub() {
       headerName: 'Delete',
       width: 150,
       renderCell: (cellValues) => (
-        <IconButton
-          onClick={(event) => {
-            handleDelete(event, cellValues);
-          }}
-        >
-          <DeleteIcon />
+        <IconButton onClick={(event) => handleDelete(event, cellValues)}>
+          <DeleteIcon style={{ color: 'red' }} />
         </IconButton>
       ),
     },
@@ -137,9 +136,7 @@ export default function Sub() {
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => {
-            navigate('/'); // Navigate to the MyForm page
-          }}
+          onClick={() => navigate('/')}
           style={{ marginRight: '10px' }}
         >
           Create User
@@ -160,21 +157,19 @@ export default function Sub() {
             pageSize={5}
             editRowsModel={editRowsModel}
             onEditRowModelChange={(newModel) => setEditRowsModel(newModel)}
-            components={{
-              Toolbar: GridToolbar,
-            }}
+            components={{ Toolbar: GridToolbar }}
             onCellClick={handleCellClick}
-            onRowClick={handleRowCellClick}
-            checkboxSelection
-            onSelectionModelChange={(newSelection) => {
-              setSelectedRows(newSelection.selectionModel);
-            }}
+        onRowClick={handleRowCellClick}
+        checkboxSelection
+        disableSelectionOnClick
+        onRowSelectionModelChange={(ids) => {
+          console.log('Selected IDs:', ids); // Debug: Log selected IDs
+          setSelectedRows(ids);
+        }}
+
           />
         </div>
       </div>
     </div>
   );
-  
-  
-  
 }
