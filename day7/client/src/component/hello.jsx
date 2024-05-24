@@ -20,11 +20,11 @@ export default function Sub() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/users');
+      const response = await axios.get('http://192.168.1.77:8081/users');
       setUsers(response.data.map((user) => ({ 
         ...user,
         id: user.userId,
-        dob: user.dob.split('T')[0] // Extracting only the date part
+        dob: user.dob
       })));
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -51,7 +51,7 @@ export default function Sub() {
   const handleSave = async (event, cellValues) => {
     const { id, dob, phoneNumber, ...rest } = cellValues.row;
     try {
-      await axios.put(`http://localhost:8081/users/${id}`, {
+      await axios.put(`http://192.168.1.77:8081/users/${id}`, {
         ...rest,
         dob: new Date(dob).toISOString().split('T')[0],
         phoneNumber: phoneNumber.toString(),
@@ -70,7 +70,7 @@ export default function Sub() {
   const handleDelete = async (event, cellValues) => {
 
     try {
-      await axios.delete(`http://localhost:8081/users/${cellValues.row.id}`);
+      await axios.delete(`http://192.168.1.77:8081/users/${cellValues.row.id}`);
       fetchData();
     } catch (err) {
       console.error('Error deleting data:', err);
@@ -83,7 +83,7 @@ if(selectedRows.length===0){
 }
   try {
    console.log('Deleting selected rows:', selectedRows); // Debugging line
-   await axios.delete('http://localhost:8081/delete_users', { data: { ids: selectedRows } });
+   await axios.delete('http://192.168.1.77:8081/delete_users', { data: { ids: selectedRows } });
  fetchData();
      setSelectedRows([]);
  } catch (err) {

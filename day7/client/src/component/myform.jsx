@@ -36,7 +36,7 @@ export default function MyForm() {
       alert('Passwords do not match');
       return;
     }
-    axios.post('http://localhost:8081/add_user', values)
+    axios.post('http://192.168.1.77d:8081/add_user', values)
     .then((res) => {
       console.log(res);
       navigate('/hello');
