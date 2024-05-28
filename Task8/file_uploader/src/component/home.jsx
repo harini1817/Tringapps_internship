@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import PDFFile from "./PDFFile";
+import CSVExcelFile from "./CSVExcelFile";
+import ImageFile from "./ImageFile";
+import "./styles.css"; // Import the CSS file
 
 export default function Myfile() {
     const [file, setFile] = useState(null);
-    const [fileContent, setFileContent] = useState("");
     const [showContent, setShowContent] = useState(false);
 
     const handleChange = (e) => {
@@ -30,13 +33,12 @@ export default function Myfile() {
 
         const reader = new FileReader();
         reader.onload = (event) => {
-            setFileContent(event.target.result);
             setShowContent(true);
         };
 
         if (file.type.startsWith("image/")) {
             reader.readAsDataURL(file);
-        } else if (file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        } else if (file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "text/plain") {
             reader.readAsText(file);
         } else if (file.name.endsWith(".pdf")) {
             reader.readAsDataURL(file);
@@ -46,34 +48,21 @@ export default function Myfile() {
     };
 
     return (
-        <>
-            <div>
-                <h2>File reader</h2>
+        <div className="container">
+            <h2>File reader</h2>
+            <div className="file-input">
+                <input onChange={handleChange} type="file"/>
             </div>
             <div>
-                <div>
-                    <input onChange={handleChange} type="file"/>
-                    <button onClick={handleContent}>Show content</button>
-                </div>
-                {showContent && (
-                    <div>
-                        <h3>Data:</h3>
-                        {file.type.startsWith("image/") ? (
-                            <img src={fileContent} alt="" />
-                        ) : file.type === "text/csv" ? (
-                            <pre>{fileContent}</pre>
-                        ) : file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ? (
-                            <pre>{fileContent}</pre>
-                        ) : file.type === "text/plain" ? (
-                            <pre>{fileContent}</pre>
-                        ) : file.type === "application/pdf" ? (
-                            <embed src={fileContent} width="500" height="500" type={file.type} />
-                        ) : (
-                            <p>File type not supported</p>
-                        )}
-                    </div>
-                )}
+                <button className="show-content-button" onClick={handleContent}>Show content</button>
             </div>
-        </>
+            {showContent && file && (
+                <>
+                    {file.type === "application/pdf" && <PDFFile file={file} />}
+                    {(file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "text/plain") && <CSVExcelFile file={file} />}
+                    {file.type.startsWith("image/") && <ImageFile file={file} />}
+                </>
+            )}
+        </div>
     );
 }
