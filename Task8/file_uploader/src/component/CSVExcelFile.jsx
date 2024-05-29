@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import * as XLSX from "xlsx";
 
 export default function CSVExcelFile({ file }) {
-    const [fileContent, setFileContent] = useState("");
+    const [excelData, setExcelData] = useState([]);
 
-    const handleContent = () => {
+    const handleReadExcel = () => {
         if (!file) {
             console.log("No file chosen");
             return;
@@ -11,16 +12,32 @@ export default function CSVExcelFile({ file }) {
 
         const reader = new FileReader();
         reader.onload = (event) => {
-            setFileContent(event.target.result);
+            const binaryString = event.target.result;
+            const workbook = XLSX.read(binaryString, { type: "binary" });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            setExcelData(data);
         };
-        reader.readAsText(file);
+        reader.readAsBinaryString(file);
     };
 
     return (
         <div>
-            <button onClick={handleContent}>Show CSV/Excel/Text content</button>
+            <button onClick={handleReadExcel} style={{ marginBottom: "20px" }}>Show Content</button>
             <div>
-                <pre>{fileContent}</pre>
+               
+                <table className="excel-table">
+                    <tbody>
+                        {excelData.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {row.map((cell, cellIndex) => (
+                                    <td key={cellIndex}>{cell}</td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

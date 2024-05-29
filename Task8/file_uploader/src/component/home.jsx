@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import PDFFile from "./PDFFile";
 import CSVExcelFile from "./CSVExcelFile";
 import ImageFile from "./ImageFile";
-import "./styles.css"; // Import the CSS file
+import VideoFile from "./VideoFile"; 
+import AudioFile from "./AudioFile"; 
+import "./styles.css"; 
 
 export default function Myfile() {
     const [file, setFile] = useState(null);
@@ -17,10 +19,12 @@ export default function Myfile() {
                 fileType === "application/pdf" || 
                 fileType === "text/plain" || 
                 fileType.startsWith("image/") || 
-                fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+                fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+                fileType.startsWith("video/") ||
+                fileType.startsWith("audio/")) { 
                 setFile(selectedFile);
             } else {
-                console.log("Please select a CSV, PDF, Excel, image, or text file.");
+                console.log("Please select a supported file type.");
             }
         }
     };
@@ -38,6 +42,10 @@ export default function Myfile() {
 
         if (file.type.startsWith("image/")) {
             reader.readAsDataURL(file);
+        } else if (file.type.startsWith("video/")) {
+            reader.readAsDataURL(file); 
+        } else if (file.type.startsWith("audio/")) {
+            reader.readAsDataURL(file); 
         } else if (file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "text/plain") {
             reader.readAsText(file);
         } else if (file.name.endsWith(".pdf")) {
@@ -49,18 +57,20 @@ export default function Myfile() {
 
     return (
         <div className="container">
-            <h2>File reader</h2>
+            <h2>FILE READER</h2>
             <div className="file-input">
-                <input onChange={handleChange} type="file"/>
+                <input onChange={handleChange} type="file" multiple/>
             </div>
             <div>
-                <button className="show-content-button" onClick={handleContent}>Show content</button>
+                <button className="show-content-button" onClick={handleContent}>Upload</button>
             </div>
             {showContent && file && (
                 <>
                     {file.type === "application/pdf" && <PDFFile file={file} />}
                     {(file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "text/plain") && <CSVExcelFile file={file} />}
                     {file.type.startsWith("image/") && <ImageFile file={file} />}
+                    {file.type.startsWith("video/") && <VideoFile file={file} />} 
+                    {file.type.startsWith("audio/") && <AudioFile file={file} />} 
                 </>
             )}
         </div>

@@ -18,9 +18,9 @@ export default function ImageFile({ file }) {
 
     return (
         <div>
-            <button onClick={handleContent}>Show Image content</button>
-            <div>
-                <img src={fileContent} alt="" />
+            <button onClick={handleContent} style={{ marginBottom: "20px" }}>Show Image content</button>
+            <div className="image-container">
+                {fileContent && <img src={fileContent} alt="" className="image-preview" />}
             </div>
         </div>
     );

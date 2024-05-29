@@ -12,3 +12,44 @@
 .show-content-button {
     margin-bottom: 20px;
 }
+
+/* styles.css */
+
+.pdf-content-box {
+    background-color: #f2f2f2; /* Light grey color */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    max-width: 400px; /* Set maximum width */
+    aspect-ratio: 1; /* Equal aspect ratio for height and width */
+    overflow-y: auto; /* Optional: Add vertical scrollbar if content exceeds max height */
+}
+
+.excel-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.excel-table td, .excel-table th {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.excel-table th {
+    background-color: #f2f2f2;
+}
+
+.image-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.image-preview {
+    max-width: 70%;
+    max-height: 70%;
+}
