@@ -1,1 +1,1 @@
-hello all React is a JavaScript library for building web app user interfaces.
+hello all React is a JavaScript library for building web app.
