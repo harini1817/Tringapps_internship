@@ -31,15 +31,15 @@
     width: 100%;
 }
 
-.excel-table td, .excel-table th {
-    border: 1px solid #dddddd;
+.excel-table td {
+    border: 1px solid #1a1a1a;
     padding: 10px;
     text-align: left;
+    
+
 }
 
-.excel-table th {
-    background-color: #f2f2f2;
-}
+
 
 .image-container {
     width: 100%;
@@ -54,9 +54,7 @@
     max-height: 70%;
 }
 body {
-    background-image: url('C:\Users\Intern\Documents\GitHub\Tringapps_internship\Task8\file_uploader\src\bg2.png');
-    background-size: cover; 
-    background-repeat: no-repeat;
+   background-color: rgb(184, 182, 182);
 }
 .card {
     border: 1px solid #ccc;
@@ -65,6 +63,13 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #dbd4d4;
+    
+        width: 300px; 
+        height: 400px; 
+        margin: 10px; 
+        box-sizing: border-box; 
+    
+    
 }
 
 .card h3 {
@@ -80,3 +85,45 @@ body {
     padding: 10px 20px; 
   }
   
+  .content-container {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+    align-items: flex-start; 
+    margin: 0 -10px; 
+}
+
+.card {
+    flex: 0 0 calc(33.33% - 20px); 
+    margin: 10px; 
+    box-sizing: border-box; 
+}
+.card .content {
+    overflow: scroll; 
+}
+@media (max-width: 768px) {
+    .card {
+        flex: 0 0 calc(50% - 20px); 
+    }
+}
+
+
+
+
+.video-container {
+    margin-top: 10px;
+}
+
+
+
+.pdf-content-box {
+   margin-left: 80px;
+    max-width: 270px; 
+   
+    overflow:scroll;
+    
+}
+.card .excel-table-container {
+    max-height: 300px; /* Set maximum height for scrolling */
+    overflow: auto; /* Enable scrolling if content exceeds maximum height */
+}

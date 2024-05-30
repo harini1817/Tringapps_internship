@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TextFile from "./TextFile"; // Import the TextFile component
+import TextFile from "./TextFile"; 
 import PDFFile from "./PDFFile";
 import CSVExcelFile from "./CSVExcelFile";
 import ImageFile from "./ImageFile";
@@ -8,31 +8,32 @@ import AudioFile from "./AudioFile";
 import "./styles.css"; 
 
 export default function Myfile() {
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
     const [showContent, setShowContent] = useState(false);
 
     const handleChange = (e) => {
-        const selectedFile = e.target.files[0];
+        const selectedFiles = e.target.files;
         
-        if (selectedFile) {
-            const fileType = selectedFile.type;
-            if (fileType === "text/csv" || 
-                fileType === "application/pdf" || 
-                fileType === "text/plain" || 
-                fileType.startsWith("image/") || 
-                fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-                fileType.startsWith("video/") ||
-                fileType.startsWith("audio/")) { 
-                setFile(selectedFile);
-            } else {
-                console.log("Please select a supported file type.");
-            }
+        if (selectedFiles.length > 0) {
+            const validFiles = Array.from(selectedFiles).filter(file => {
+                const fileType = file.type;
+                return (
+                    fileType === "text/csv" || 
+                    fileType === "application/pdf" || 
+                    fileType === "text/plain" || 
+                    fileType.startsWith("image/") || 
+                    fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+                    fileType.startsWith("video/") ||
+                    fileType.startsWith("audio/")
+                );
+            });
+            setFiles(validFiles);
         }
     };
 
     const handleContent = () => {
-        if (!file) {
-            console.log("No file chosen");
+        if (files.length === 0) {
+            console.log("No files chosen");
             return;
         }
 
@@ -41,7 +42,7 @@ export default function Myfile() {
 
     return (
         <div className="container">
-            <h2  style={{ color:"white" }}>FILE READER</h2>
+            <h2>FILE READER</h2>
             <div className="card">
                 <div className="file-input">
                     <input onChange={handleChange} type="file" multiple/>
@@ -50,38 +51,18 @@ export default function Myfile() {
                     <button className="show-content-button" onClick={handleContent}>Upload</button>
                 </div>
             </div>
-            {showContent && file && (
+            {showContent && files.length > 0 && (
                 <div className="content-container">
-                    {file.type === "application/pdf" && (
-                        <div className="card">
-                            <PDFFile file={file} />
+                    {files.map((file, index) => (
+                        <div className="card" key={index}>
+                            {file.type === "application/pdf" && <PDFFile file={file} />}
+                            {(file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") && <CSVExcelFile file={file} />}
+                            {file.type === "text/plain" && <TextFile file={file} />}
+                            {file.type.startsWith("image/") && <ImageFile file={file} />}
+                            {file.type.startsWith("video/") && <VideoFile file={file} />}
+                            {file.type.startsWith("audio/") && <AudioFile file={file} />}
                         </div>
-                    )}
-                    {(file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") && (
-                        <div className="card">
-                            <CSVExcelFile file={file} />
-                        </div>
-                    )}
-                    {file.type === "text/plain" && (
-                        <div className="card">
-                            <TextFile file={file} />
-                        </div>
-                    )}
-                    {file.type.startsWith("image/") && (
-                        <div className="card">
-                            <ImageFile file={file} />
-                        </div>
-                    )}
-                    {file.type.startsWith("video/") && (
-                        <div className="card">
-                            <VideoFile file={file} />
-                        </div>
-                    )}
-                    {file.type.startsWith("audio/") && (
-                        <div className="card">
-                            <AudioFile file={file} />
-                        </div>
-                    )}
+                    ))}
                 </div>
             )}
         </div>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { getDocument } from 'pdfjs-dist/webpack'; // Import specific functionality
-import "./styles.css"; // Import your CSS file
-// Extract text from PDF function
+import { getDocument } from 'pdfjs-dist/webpack'; 
+import "./styles.css"; 
+
 const extractTextFromPDF = async (pdf) => {
     const numPages = pdf.numPages;
-    let extractedContent = ""; // Initialize extracted content
+    let extractedContent = ""; 
 
     for (let i = 1; i <= numPages; i++) {
         const page = await pdf.getPage(i); // Get page from PDF
@@ -25,14 +25,14 @@ const extractTextFromPDF = async (pdf) => {
             }
         }
 
-        // Add any remaining text that doesn't end with a full stop
+        
         if (pageContent !== "") {
-            extractedContent += pageContent + "\n"; // Add remaining text to extracted content
-            pageContent = ""; // Reset page content
+            extractedContent += pageContent + "\n"; 
+            pageContent = ""; 
         }
     }
 
-    return extractedContent; // Return extracted content
+    return extractedContent; 
 };
 
 export default function PDFFile({ file }) {
@@ -67,7 +67,7 @@ export default function PDFFile({ file }) {
     return (
         <div>
             <button onClick={handleContent}>Show PDF content</button>
-            <div className="pdf-content-box"> {/* Apply the CSS class */}
+            <div className="pdf-content-box"> 
                 <pre>{pdfContent}</pre>
             </div>
         </div>

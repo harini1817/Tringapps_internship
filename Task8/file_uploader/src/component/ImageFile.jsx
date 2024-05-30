@@ -20,7 +20,7 @@ export default function ImageFile({ file }) {
         <div>
             <button onClick={handleContent} style={{ marginBottom: "20px" }}>Show Image content</button>
             <div className="image-container">
-                {fileContent && <img src={fileContent} alt="" className="image-preview" />}
+                {fileContent && <img src={fileContent} alt="" className="image-preview" width='500px' height='200px' />}
             </div>
         </div>
     );

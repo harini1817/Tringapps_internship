@@ -24,10 +24,10 @@ export default function CSVExcelFile({ file }) {
 
     return (
         <div>
-            <button onClick={handleReadExcel} style={{ marginBottom: "20px" }}>Show Content</button>
-            <div>
+            <button onClick={handleReadExcel} style={{ marginBottom: "20px" }}>Show Excel/CSV Content</button>
+            <div className="excel-table-container">
                
-                <table className="excel-table">
+                <table className="excel-table" >
                     <tbody>
                         {excelData.map((row, rowIndex) => (
                             <tr key={rowIndex}>

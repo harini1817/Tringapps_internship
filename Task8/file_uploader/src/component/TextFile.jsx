@@ -18,7 +18,7 @@ const TextFile = ({ file }) => {
     };
 
     return (
-        <div>
+        <div  className="excel-table-container">
             <button onClick={handleContent} style={{ marginBottom: "20px" }}>Show Text content</button>
             <div className="text-content">
                 {fileContent && <pre>{fileContent}</pre>}
