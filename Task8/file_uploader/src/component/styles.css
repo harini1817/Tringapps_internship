@@ -53,3 +53,30 @@
     max-width: 70%;
     max-height: 70%;
 }
+body {
+    background-image: url('C:\Users\Intern\Documents\GitHub\Tringapps_internship\Task8\file_uploader\src\bg2.png');
+    background-size: cover; 
+    background-repeat: no-repeat;
+}
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #dbd4d4;
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.card p {
+    margin-bottom: 0;
+}
+
+.container button {
+    font-size: 16px; 
+    padding: 10px 20px; 
+  }
+  

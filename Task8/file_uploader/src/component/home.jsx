@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TextFile from "./TextFile"; // Import the TextFile component
 import PDFFile from "./PDFFile";
 import CSVExcelFile from "./CSVExcelFile";
 import ImageFile from "./ImageFile";
@@ -35,43 +36,53 @@ export default function Myfile() {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            setShowContent(true);
-        };
-
-        if (file.type.startsWith("image/")) {
-            reader.readAsDataURL(file);
-        } else if (file.type.startsWith("video/")) {
-            reader.readAsDataURL(file); 
-        } else if (file.type.startsWith("audio/")) {
-            reader.readAsDataURL(file); 
-        } else if (file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "text/plain") {
-            reader.readAsText(file);
-        } else if (file.name.endsWith(".pdf")) {
-            reader.readAsDataURL(file);
-        } else {
-            reader.readAsText(file);
-        }
+        setShowContent(true);
     };
 
     return (
         <div className="container">
-            <h2>FILE READER</h2>
-            <div className="file-input">
-                <input onChange={handleChange} type="file" multiple/>
-            </div>
-            <div>
-                <button className="show-content-button" onClick={handleContent}>Upload</button>
+            <h2  style={{ color:"white" }}>FILE READER</h2>
+            <div className="card">
+                <div className="file-input">
+                    <input onChange={handleChange} type="file" multiple/>
+                </div>
+                <div>
+                    <button className="show-content-button" onClick={handleContent}>Upload</button>
+                </div>
             </div>
             {showContent && file && (
-                <>
-                    {file.type === "application/pdf" && <PDFFile file={file} />}
-                    {(file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "text/plain") && <CSVExcelFile file={file} />}
-                    {file.type.startsWith("image/") && <ImageFile file={file} />}
-                    {file.type.startsWith("video/") && <VideoFile file={file} />} 
-                    {file.type.startsWith("audio/") && <AudioFile file={file} />} 
-                </>
+                <div className="content-container">
+                    {file.type === "application/pdf" && (
+                        <div className="card">
+                            <PDFFile file={file} />
+                        </div>
+                    )}
+                    {(file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") && (
+                        <div className="card">
+                            <CSVExcelFile file={file} />
+                        </div>
+                    )}
+                    {file.type === "text/plain" && (
+                        <div className="card">
+                            <TextFile file={file} />
+                        </div>
+                    )}
+                    {file.type.startsWith("image/") && (
+                        <div className="card">
+                            <ImageFile file={file} />
+                        </div>
+                    )}
+                    {file.type.startsWith("video/") && (
+                        <div className="card">
+                            <VideoFile file={file} />
+                        </div>
+                    )}
+                    {file.type.startsWith("audio/") && (
+                        <div className="card">
+                            <AudioFile file={file} />
+                        </div>
+                    )}
+                </div>
             )}
         </div>
     );
