@@ -1,0 +1,63 @@
+bodY{
+    background-color: rgb(175, 230, 231);
+}
+.container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh; /* Set height to 85% of the viewport height */
+    width: 411px; /* Set width to match Google Pixel width */
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+   
+}
+
+.card-wrapper {
+    text-align: center;
+    border: 1px solid black ;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    width: 400px; /* Allow card to fill container horizontally */
+    max-width: 100%; /* Ensure card does not exceed container width */
+    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+    height: 600px;
+    padding: 20px; /* Add padding to the card */
+}
+.notification-icon{
+    padding-left: 20px;
+
+}
+.notification-icon :hover{
+    cursor: pointer;
+}
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 85%;
+    transform: translateX(-50%);
+    background-color: #f0eded;
+    color: #0e0d0d;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid #121213;
+  }
+  
+  .toast-message {
+    margin-right: 10px;
+
+  }
+.close-icon{
+    margin-left: 10px;
+    color: red;
+}
+.close-icon :hover{
+    cursor: pointer;
+}
