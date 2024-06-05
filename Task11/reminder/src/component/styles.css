@@ -1,63 +1,118 @@
-bodY{
-    background-color: rgb(175, 230, 231);
+body {
+    background-color: rgb(237, 242, 242);
+    margin: 0; /* Remove default body margin */
+    overflow: hidden; /* Prevent scrolling */
 }
+
 .container-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 85vh; /* Set height to 85% of the viewport height */
-    width: 411px; /* Set width to match Google Pixel width */
+    height: 85vh;
+    width: 100vw; /* Use viewport width instead of fixed width */
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
-   
 }
 
 .card-wrapper {
     text-align: center;
-    border: 1px solid black ;
+    border: 1px solid black;
 }
 
 .card {
-    background-color: #fff;
+    background-color: #d0d5d5;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
-    width: 400px; /* Allow card to fill container horizontally */
-    max-width: 100%; /* Ensure card does not exceed container width */
-    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
-    height: 600px;
-    padding: 20px; /* Add padding to the card */
+    width: 400px;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+
 }
-.notification-icon{
+
+.notification-icon {
     padding-left: 20px;
-
 }
-.notification-icon :hover{
+
+.notification-icon:hover {
     cursor: pointer;
 }
-.toast {
+
+.notification-wrapper {
     position: fixed;
-    bottom: 20px;
-    left: 85%;
-    transform: translateX(-50%);
-    background-color: #f0eded;
-    color: #0e0d0d;
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
-    border: 2px solid #121213;
-  }
-  
-  .toast-message {
-    margin-right: 10px;
+    bottom: 270px;
+    right: 20px;
+    opacity: 0; /* Initially hide the notifications */
+    animation: fadeIn 0.3s ease forwards; /* Add animation effect */
+    pointer-events: none; /* Disable pointer events when hidden */
+}
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.notification-wrapper.show {
+    pointer-events: auto; /* Enable pointer events when shown */
+}
+
+.notification-card {
+    margin-top: 10px; /* Adjust the margin between stacked notifications */
+    height: 50px;
+    position: relative;
+    
+}
+
+.notification-card:not(:first-child) {
+    margin-top: 30px; /* Adjust the margin between stacked notifications */
+}
+
+.notification-card {
+    margin-top: 10px;
+    position: relative;
+ 
+    margin-bottom: 150px;
+    height: 50px; /* Adjust height as needed */
+   
+    
+}
+
+.notification-card.hidden {
+    display: none; /* Hide the notification card */
+}
+
+.dashboard {
+    background-color: #d0d5d5;
+    text-align: right;
+    padding-right: 10px;
+    height: 100px;
+   padding-bottom: 40px;
+}
+.heading{
+    text-align: center;
+    padding-top: 30px;
+}
+.notification-container {
+    position: fixed;
+    bottom: 300px;
+    right: 20px;
+    max-height: 300px; /* Set max height for scrolling */
+    min-height: 100px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    background-color:rgba(0,0,0,0.5); /* Transparent background */
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it's above other elements */
   }
-.close-icon{
-    margin-left: 10px;
-    color: red;
-}
-.close-icon :hover{
-    cursor: pointer;
-}
+  .cancel-icon-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
